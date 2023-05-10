@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
@@ -15,11 +15,14 @@ class Employee extends Model
     protected $fillable = [
         'first_name',
         'middle_name',
-        'last_name'
+        'last_name',
     ];
 
-public function position(): BelongsToMany
-{
-    return $this->belongsToMany(Position::class, 'employee_position');
-}
+    /**
+     * The roles that belong to the Employee
+     */
+    public function position(): BelongsToMany
+    {
+        return $this->belongsToMany(Position::class, 'employee_position');
+    }
 }

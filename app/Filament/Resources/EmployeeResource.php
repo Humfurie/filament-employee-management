@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
-use App\Filament\Resources\EmployeeResource\RelationManagers;
 use App\Models\Employee;
+use App\Models\Position;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -12,7 +12,6 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Position;
 
 class EmployeeResource extends Resource
 {
@@ -20,17 +19,30 @@ class EmployeeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    protected static ?string $recordTitleAttribute = 'first_name';
+
+    protected static ?string $navigationGroup = 'Employee';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 //
-                Forms\Components\TextInput::make('first_name')->required(),
-                Forms\Components\TextInput::make('middle_name')->required(),
-                Forms\Components\TextInput::make('last_name')->required(),
-                // Forms\Components\Select::make('name')
-                // ->relationship('position', 'id')
-                // ->searchable()
+                Forms\Components\TextInput::make('first_name')
+                    ->label('First Name')
+                    ->required(),
+                Forms\Components\TextInput::make('middle_name')
+                    ->label('Middle Name')
+                    ->required(),
+                Forms\Components\TextInput::make('last_name')
+                    ->label('Last Name')
+                    ->required(),
+                Forms\Components\Select::make('position')
+                // ->multiple()
+                // ->relationship('position', 'name')
+                    ->options(Position::all()->pluck('name', 'id'))
+                    ->default('name')
+                    ->searchable(),
             ]);
     }
 
@@ -40,11 +52,18 @@ class EmployeeResource extends Resource
             ->columns([
                 //
                 Tables\Columns\TextColumn::make('first_name')
-                ->sortable()
-                ->searchable(),
+                    ->label('First Name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('last_name')
-                ->sortable()
-                ->searchable(),
+                    ->label('Last Name')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->date('d/m/y')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->defaultSort('last_name', 'asc')
             ->filters([
@@ -52,6 +71,8 @@ class EmployeeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -82,5 +103,10 @@ class EmployeeResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return self::getModel()::count();
     }
 }
