@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PositionResource\Pages;
+use Domain\Position\Actions\DeletePositionAction;
 use Domain\Position\Models\Position;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -10,7 +11,9 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\DB;
 
 class PositionResource extends Resource
 {
@@ -43,8 +46,10 @@ class PositionResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->using(fn (Position $record) => DB::transaction(fn () => app(DeletePositionAction::class)->execute($record))),
                 Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
@@ -67,6 +72,7 @@ class PositionResource extends Resource
             'index' => Pages\ListPositions::route('/'),
             'create' => Pages\CreatePosition::route('/create'),
             'edit' => Pages\EditPosition::route('/{record}/edit'),
+            'view' => Pages\ViewPosition::route('/{record}')
         ];
     }
 
