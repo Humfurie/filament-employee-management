@@ -2,34 +2,44 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PositionResource\Pages;
-use App\Filament\Resources\PositionResource\RelationManagers\EmployeesRelationManager;
-use Domain\Position\Actions\DeletePositionAction;
-use Domain\Position\Models\Position;
+use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers;
+use Domain\User\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Facades\DB;
 
-class PositionResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Position::class;
+    protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Employee';
+    protected static ?string $navigationGroup = 'User Settings';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                ->required(),
+                    ->required(),
+                Forms\Components\TextInput::make('email')
+                    ->unique(ignoreRecord: true)
+                    ->required(),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->hiddenOn(['edit', 'view'])
+                    ->required(),
+                Forms\Components\Select::make('roles')
+                    ->multiple()
+                    ->relationship('roles', 'name')
+                    ->preload(),
             ]);
     }
 
@@ -40,17 +50,20 @@ class PositionResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->searchable(),
             ])
-            ->defaultSort('name', 'asc')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->using(fn (Position $record) => DB::transaction(fn () => app(DeletePositionAction::class)->execute($record))),
-                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -62,17 +75,17 @@ class PositionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EmployeesRelationManager::class
+            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPositions::route('/'),
-            'create' => Pages\CreatePosition::route('/create'),
-            'edit' => Pages\EditPosition::route('/{record}/edit'),
-            'view' => Pages\ViewPosition::route('/{record}')
+            'index' => Pages\ListUsers::route('/'),
+            'create' => Pages\CreateUser::route('/create'),
+            'view' => Pages\ViewUser::route('/{record}'),
+            'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
 
@@ -82,10 +95,5 @@ class PositionResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    protected static function getNavigationBadge(): ?string
-    {
-        return self::getModel()::count();
     }
 }

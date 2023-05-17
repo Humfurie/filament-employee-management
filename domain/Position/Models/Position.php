@@ -2,9 +2,10 @@
 
 namespace Domain\Position\Models;
 
+use Domain\Employee\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Position extends Model
@@ -19,8 +20,8 @@ class Position extends Model
     /**
      * The roles that belong to the Position
      */
-    public function employee(): BelongsToMany
+    public function employees(): HasMany
     {
-        return $this->belongsToMany(Employee::class, 'employee_position');
+        return $this->hasMany(Employee::class);
     }
 }

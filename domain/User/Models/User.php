@@ -1,16 +1,21 @@
 <?php
 
-namespace App\Models;
+namespace Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles, HasPermissions;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +44,12 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'password' => 'hashed',
         'email_verified_at' => 'datetime',
     ];
+
+    public function canAccessFilament(): bool
+    {
+        return $this->hasRole(['Admin', 'Manager', 'User']);
+    }
 }

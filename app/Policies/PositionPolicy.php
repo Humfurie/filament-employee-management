@@ -2,27 +2,26 @@
 
 namespace App\Policies;
 
+use Domain\Position\Models\Position;
 use Domain\User\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
-class UserPolicy
+class PositionPolicy
 {
-    use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('user_viewAny');
+        return $user->can('position_viewAny');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, user $model): bool
+    public function view(User $user, Position $position): bool
     {
-        return $user->can('user_view');
+        return $user->can('position_view');
     }
 
     /**
@@ -30,38 +29,38 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('user_create');
+        return $user->can('position_create');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, user $model): bool
+    public function update(User $user, Position $position): bool
     {
-        return $user->can('user_update');
+        return $user->can('position_update');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, user $model): bool
+    public function delete(User $user, Position $position): bool
     {
-        return $user->can('user_delete');
+        return $user->can('position_delete');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, user $model): bool
+    public function restore(User $user, Position $position): bool
     {
-        return $user->can('user_restore');
+        return $user->can('position_restore');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, user $model): bool
+    public function forceDelete(User $user, Position $position): bool
     {
-        return $user->can('user_forceDelete');
+        return $user->can('position_forceDelete');
     }
 }

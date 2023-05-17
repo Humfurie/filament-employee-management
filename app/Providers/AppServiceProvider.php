@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\User;
+use Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;

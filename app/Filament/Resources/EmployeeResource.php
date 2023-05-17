@@ -3,7 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
-use App\Models\User;
+use App\Filament\Resources\EmployeeResource\RelationManagers\PositionsRelationManager;
+use Domain\Employee\Actions\DeleteEmployeeAction;
 use Domain\Employee\Models\Employee;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -13,6 +14,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Domain\Position\Models\Position;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeResource extends Resource
 {
@@ -28,7 +30,6 @@ class EmployeeResource extends Resource
     {
         return $form
             ->schema([
-                //
                 Forms\Components\TextInput::make('first_name')
                     ->label('First Name')
                     ->required(),
@@ -38,12 +39,10 @@ class EmployeeResource extends Resource
                 Forms\Components\TextInput::make('last_name')
                     ->label('Last Name')
                     ->required(),
-                Forms\Components\Select::make('position')
-                // ->multiple()
-                // ->relationship('position', 'name')
-                    ->options(Position::all()->pluck('name', 'id'))
-                    ->default('name')
-                    ->searchable(),
+                Forms\Components\Select::make('position_id')
+                    ->label('Position')
+                    ->hiddenOn('edit')
+                    ->relationship('position', 'name'),
             ]);
     }
 
@@ -72,7 +71,8 @@ class EmployeeResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->using(fn (Employee $record) => DB::transaction(fn () => app(DeleteEmployeeAction::class)->execute($record))),
                 Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
@@ -85,7 +85,7 @@ class EmployeeResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PositionsRelationManager::class,
         ];
     }
 
