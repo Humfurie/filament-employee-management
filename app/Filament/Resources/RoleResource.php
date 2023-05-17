@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
-use App\Filament\Resources\RoleResource\RelationManagers;
 use Domain\Role\Actions\DeleteRoleAction;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
@@ -57,13 +56,13 @@ class RoleResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                ->using(fn (Role $record) => DB::transaction(fn () => app(DeleteRoleAction::class)->execute($record))),
+                    ->using(fn (Role $record) => DB::transaction(fn () => app(DeleteRoleAction::class)->execute($record))),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -73,7 +72,7 @@ class RoleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

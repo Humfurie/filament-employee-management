@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Domain\Position\Models;
 
 use Domain\Employee\Models\Employee;
@@ -17,9 +19,7 @@ class Position extends Model
         'name',
     ];
 
-    /**
-     * The roles that belong to the Position
-     */
+    /** The roles that belong to the Position */
     public function employees(): HasMany
     {
         return $this->hasMany(Employee::class);

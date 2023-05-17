@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Domain\Employee\Models;
 
 use Domain\Position\Models\Position;
@@ -20,9 +22,7 @@ class Employee extends Model
         'last_name',
     ];
 
-    /**
-     * The roles that belong to the Employee
-     */
+    /** The roles that belong to the Employee */
     public function position(): BelongsTo
     {
         return $this->belongsTo(Position::class);

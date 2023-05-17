@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PositionResource\Pages;
@@ -12,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 
@@ -29,7 +30,7 @@ class PositionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                ->required(),
+                    ->required(),
             ]);
     }
 
@@ -62,7 +63,7 @@ class PositionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            EmployeesRelationManager::class
+            EmployeesRelationManager::class,
         ];
     }
 
@@ -72,7 +73,7 @@ class PositionResource extends Resource
             'index' => Pages\ListPositions::route('/'),
             'create' => Pages\CreatePosition::route('/create'),
             'edit' => Pages\EditPosition::route('/{record}/edit'),
-            'view' => Pages\ViewPosition::route('/{record}')
+            'view' => Pages\ViewPosition::route('/{record}'),
         ];
     }
 

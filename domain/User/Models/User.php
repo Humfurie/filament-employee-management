@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Domain\User\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Models\Contracts\FilamentUser;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,7 +16,11 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles, HasPermissions;
+    use HasApiTokens;
+    use Notifiable;
+    use SoftDeletes;
+    use HasRoles;
+    use HasPermissions;
 
     /**
      * The attributes that are mass assignable.

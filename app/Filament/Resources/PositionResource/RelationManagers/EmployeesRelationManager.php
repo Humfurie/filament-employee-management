@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\PositionResource\RelationManagers;
 
 use Filament\Forms;
@@ -7,8 +9,6 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class EmployeesRelationManager extends RelationManager
 {
@@ -40,14 +40,14 @@ class EmployeesRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('first_name')
-                ->label('First Name'),
+                    ->label('First Name'),
                 Tables\Columns\TextColumn::make('middle_name')
-                ->label('Middle Name'),
+                    ->label('Middle Name'),
                 Tables\Columns\TextColumn::make('last_name')
-                ->label('Last Name'),
+                    ->label('Last Name'),
             ])
             ->filters([
-                //
+
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

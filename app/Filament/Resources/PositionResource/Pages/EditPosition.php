@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\PositionResource\Pages;
 
 use App\Filament\Resources\PositionResource;
@@ -33,6 +35,7 @@ class EditPosition extends EditRecord
                 )
             )
         );
+
         return $editPosition;
     }
 }

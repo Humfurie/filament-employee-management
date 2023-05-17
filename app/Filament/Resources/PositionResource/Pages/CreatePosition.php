@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\PositionResource\Pages;
 
 use App\Filament\Resources\PositionResource;
@@ -23,6 +25,7 @@ class CreatePosition extends CreateRecord
         return DB::transaction(fn () => app(CreatePositionAction::class)->execute(
             new PositionData(
                 name: $data['name'],
-            )));
+            )
+        ));
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 
 use App\Policies\EmployeePolicy;
-use App\Policies\PermissionPolicy;
 use App\Policies\PositionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
@@ -13,7 +14,6 @@ use Domain\Employee\Models\Employee;
 use Domain\Position\Models\Position;
 use Domain\User\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
@@ -30,9 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Role::class => RolePolicy::class,
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     */
+    /** Register any authentication / authorization services. */
     public function boot(): void
     {
         $this->registerPolicies();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
@@ -13,7 +15,6 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Domain\Position\Models\Position;
 use Illuminate\Support\Facades\DB;
 
 class EmployeeResource extends Resource
@@ -50,7 +51,7 @@ class EmployeeResource extends Resource
     {
         return $table
             ->columns([
-                //
+
                 Tables\Columns\TextColumn::make('first_name')
                     ->label('First Name')
                     ->sortable()

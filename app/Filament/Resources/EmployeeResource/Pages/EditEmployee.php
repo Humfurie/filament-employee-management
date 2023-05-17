@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\EmployeeResource\Pages;
 
 use App\Filament\Resources\EmployeeResource;
@@ -33,7 +35,7 @@ class EditEmployee extends EditRecord
                 middle_name: $data['middle_name'],
                 last_name: $data['last_name'],
             )
-            ));
+        ));
 
         return $editEmployee;
     }

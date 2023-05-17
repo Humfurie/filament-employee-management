@@ -2,31 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Database\Seeders;
+namespace Database\Factories;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-use Domain\User\Models\User;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class DatabaseSeeder extends Seeder
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ */
+class PermissionFactory extends Factory
 {
-    /** Seed the application's database. */
-    public function run(): void
+    protected $model = Permission::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
-
-        $user = User::create([
-            'name' => 'Humphrey Singculan',
-            'email' => 'Humfurie@gmail.com',
-            'password' => 'Humfurie',
-        ]);
-
-        $role = Role::create(
-            ['name' => 'Admin'],
-        );
-
         $permissions = [
             'admin',
             'admin.viewAny',
@@ -71,13 +65,9 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            $assignPermission = Permission::create([
+            return [
                 'name' => $permission,
-            ]);
-
-            $role->givePermissionTo([$assignPermission]);
+            ];
         }
-
-        $user->assignRole('Admin');
     }
 }
