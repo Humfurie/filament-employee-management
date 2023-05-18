@@ -24,11 +24,13 @@ class CreateEmployee extends CreateRecord
     {
         return DB::transaction(fn () => app(CreateEmployeeAction::class)->execute(
             new EmployeeData(
-                position_id: $data['position_id'],
+                user_id: (int) auth()->user()->id,
+                position_id: (int) $data['position_id'],
                 first_name: $data['first_name'],
                 middle_name: $data['middle_name'],
                 last_name: $data['last_name'],
             )
         ));
+        // return dd($data);
     }
 }

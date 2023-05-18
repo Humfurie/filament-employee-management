@@ -85,8 +85,8 @@ class PositionResource extends Resource
             ]);
     }
 
-    protected static function getNavigationBadge(): ?string
-    {
-        return self::getModel()::count();
-    }
+    // protected static function getNavigationBadge(): ?string
+    // {
+    //     return self::getModel()::count();
+    // }
 }

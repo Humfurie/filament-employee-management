@@ -8,8 +8,12 @@ use Spatie\Permission\Models\Role;
 
 class DeleteRoleAction
 {
-    public function execute(Role $role): void
+    public function execute(Role $role): ?bool
     {
-        $role->delete();
+        if ($role->name === 'Admin') {
+
+        }
+
+        return $role->delete();
     }
 }

@@ -12,6 +12,6 @@ class RoleSeeder extends Seeder
     /** Run the database seeds. */
     public function run(): void
     {
-        RoleFactory::new()->create(['namme' => 'Admin']);
+        RoleFactory::new()->create(['name' => 'Admin']);
     }
 }

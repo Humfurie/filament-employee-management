@@ -4,50 +4,53 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Policies\Concerns\ChecksWildcardPermissions;
 use Domain\User\Models\User;
 use Spatie\Permission\Models\Role;
 
 class RolePolicy
 {
+    use ChecksWildcardPermissions;
+
     /** Determine whether the user can view any models. */
     public function viewAny(User $user): bool
     {
-        return $user->can('role_viewAny');
+        return $this->checkWildcardPermissions($user);
     }
 
     /** Determine whether the user can view the model. */
     public function view(User $user, Role $role): bool
     {
-        return $user->can('role_view');
+        return $this->checkWildcardPermissions($user);
     }
 
     /** Determine whether the user can create models. */
     public function create(User $user): bool
     {
-        return $user->can('role_create');
+        return $this->checkWildcardPermissions($user);
     }
 
     /** Determine whether the user can update the model. */
     public function update(User $user, Role $role): bool
     {
-        return $user->can('role_update');
+        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
     }
 
     /** Determine whether the user can delete the model. */
     public function delete(User $user, Role $role): bool
     {
-        return $user->can('role_delete');
+        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
     }
 
     /** Determine whether the user can restore the model. */
     public function restore(User $user, Role $role): bool
     {
-        return $user->can('role_restore');
+        return $this->checkWildcardPermissions($user);
     }
 
     /** Determine whether the user can permanently delete the model. */
     public function forceDelete(User $user, Role $role): bool
     {
-        return $user->can('role_forceDelete');
+        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
     }
 }

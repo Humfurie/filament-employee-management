@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EmployeeResource\Pages;
-use App\Filament\Resources\EmployeeResource\RelationManagers\PositionsRelationManager;
+use Domain\Employee\Actions\RestoreEmployeeAction;
+use Domain\Employee\Actions\RestoreEmployeeBulkAction;
 use Domain\Employee\Actions\DeleteEmployeeAction;
+use Domain\Employee\Actions\DeleteEmployeeBulkAction;
+use Domain\Employee\Actions\ForceDeleteEmployeeAction;
+use Domain\Employee\Actions\ForceDeleteEmployeeBulkAction;
 use Domain\Employee\Models\Employee;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -14,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 
@@ -42,7 +47,6 @@ class EmployeeResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('position_id')
                     ->label('Position')
-                    ->hiddenOn('edit')
                     ->relationship('position', 'name'),
             ]);
     }
@@ -71,23 +75,31 @@ class EmployeeResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->using(fn (Employee $record) => DB::transaction(fn () => app(DeleteEmployeeAction::class)->execute($record))),
-                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\RestoreAction::make()
+                    ->using(fn (Employee $record) => DB::transaction(fn () => app(RestoreEmployeeAction::class)->execute($record))),
+                Tables\Actions\ForceDeleteAction::make()
+                    ->using(fn (Employee $record) => DB::transaction(fn () => app(ForceDeleteEmployeeAction::class)->execute($record))),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->using(fn (Collection $records) => $records->each(fn (Employee $record) => DB::transaction(fn () => app(DeleteEmployeeBulkAction::class)->execute($record))))
+                    ->authorize('deleteBulkAction'),
+                Tables\Actions\ForceDeleteBulkAction::make()
+                    ->using(fn (Collection $records) => $records->each(fn (Employee $record) => DB::transaction(fn () => app(ForceDeleteEmployeeBulkAction::class)->execute($record))))
+                ->authorize('forceDeleteBulkAction'),
+                Tables\Actions\RestoreBulkAction::make()
+                    ->using(fn (Collection $records) => $records->each(fn (Employee $record) => DB::transaction(fn () => app(RestoreEmployeeBulkAction::class)->execute($record))))
+                ->authorize('restoreBulkAction'),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            PositionsRelationManager::class,
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -96,6 +108,7 @@ class EmployeeResource extends Resource
             'index' => Pages\ListEmployees::route('/'),
             'create' => Pages\CreateEmployee::route('/create'),
             'edit' => Pages\EditEmployee::route('/{record}/edit'),
+            'view' => Pages\ViewEmployee::route('/{record}'),
         ];
     }
 
@@ -107,8 +120,8 @@ class EmployeeResource extends Resource
             ]);
     }
 
-    protected static function getNavigationBadge(): ?string
-    {
-        return self::getModel()::count();
-    }
+    // protected static function getNavigationBadge(): ?string
+    // {
+    //     return self::getModel()::count();
+    // }
 }

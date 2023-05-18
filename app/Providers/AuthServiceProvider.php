@@ -13,6 +13,7 @@ use App\Policies\UserPolicy;
 use Domain\Employee\Models\Employee;
 use Domain\Position\Models\Position;
 use Domain\User\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Spatie\Permission\Models\Role;
 
@@ -34,5 +35,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        Gate::after(fn ($user) => $user instanceof User ? $user->hasRole('Admin') : null);
     }
 }

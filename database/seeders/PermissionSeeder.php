@@ -45,6 +45,9 @@ class PermissionSeeder extends Seeder
             'employee.delete',
             'employee.restore',
             'employee.forceDelete',
+            'employee.restoreBulkAction',
+            'employee.deleteBulkAction',
+            'employee.forceDeleteBulkAction',
             'position',
             'position.viewAny',
             'position.view',
@@ -54,7 +57,7 @@ class PermissionSeeder extends Seeder
             'position.restore',
             'position.forceDelete',
         ];
-        foreach($permissions as $permission){
+        foreach($permissions as $permission) {
             PermissionFactory::new()->create(['name' => $permission]);
         }
     }

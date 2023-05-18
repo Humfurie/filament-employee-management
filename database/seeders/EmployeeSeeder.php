@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use Database\Factories\EmployeeFactory;
-use Database\Factories\PositionFactory;
-use Domain\Position\Models\Position;
 use Illuminate\Database\Seeder;
 
 class EmployeeSeeder extends Seeder

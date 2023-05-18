@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use Domain\Employee\Models\Employee;
 use Domain\Position\Models\Position;
+use Domain\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -23,7 +24,10 @@ class EmployeeFactory extends Factory
     public function definition(): array
     {
         $position = Position::inRandomOrder()->first();
+        $user = User::inRandomOrder()->first();
+
         return [
+            'user_id' => $user->id,
             'position_id' => $position->id,
             'first_name' => fake()->firstName(),
             'middle_name' => fake()->lastName(),
