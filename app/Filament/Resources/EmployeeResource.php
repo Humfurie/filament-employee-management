@@ -12,6 +12,7 @@ use Domain\Employee\Actions\DeleteEmployeeBulkAction;
 use Domain\Employee\Actions\ForceDeleteEmployeeAction;
 use Domain\Employee\Actions\ForceDeleteEmployeeBulkAction;
 use Domain\Employee\Models\Employee;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -28,7 +29,7 @@ class EmployeeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
-    protected static ?string $recordTitleAttribute = 'first_name';
+    // protected static ?string $recordTitleAttribute = 'first_name';
 
     protected static ?string $navigationGroup = 'Employee';
 
@@ -90,10 +91,10 @@ class EmployeeResource extends Resource
                     ->authorize('deleteBulkAction'),
                 Tables\Actions\ForceDeleteBulkAction::make()
                     ->using(fn (Collection $records) => $records->each(fn (Employee $record) => DB::transaction(fn () => app(ForceDeleteEmployeeBulkAction::class)->execute($record))))
-                ->authorize('forceDeleteBulkAction'),
+                    ->authorize('forceDeleteBulkAction'),
                 Tables\Actions\RestoreBulkAction::make()
                     ->using(fn (Collection $records) => $records->each(fn (Employee $record) => DB::transaction(fn () => app(RestoreEmployeeBulkAction::class)->execute($record))))
-                ->authorize('restoreBulkAction'),
+                    ->authorize('restoreBulkAction'),
             ]);
     }
 
@@ -118,6 +119,10 @@ class EmployeeResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+            // ->when(
+            //     ! Filament::auth()->user()->isSuperAdmin(),
+            //      fn (Builder $query) => $query->whereBelongsTo(Filament::auth()->user())
+            // );
     }
 
     // protected static function getNavigationBadge(): ?string

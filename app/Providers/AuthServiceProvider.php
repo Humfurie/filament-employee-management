@@ -36,6 +36,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::after(fn ($user) => $user instanceof User ? $user->hasRole('Admin') : null);
+        Gate::after(fn ($user) => $user instanceof User ? $user->hasRole(config('domain.role.super_admin')) : null);
     }
 }

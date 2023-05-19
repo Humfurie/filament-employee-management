@@ -7,7 +7,6 @@ namespace App\Policies;
 use App\Policies\Concerns\ChecksWildcardPermissions;
 use Domain\Employee\Models\Employee;
 use Domain\User\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 class EmployeePolicy
 {
@@ -17,6 +16,7 @@ class EmployeePolicy
     public function viewAny(User $user): bool
     {
         return $this->checkWildcardPermissions($user);
+        // return dd(config('domain.role.super_admin'));
     }
 
     /** Determine whether the user can view the model. */
@@ -57,8 +57,8 @@ class EmployeePolicy
 
     public function deleteBulkAction(User $user): bool
     {
-        // return $this->checkWildcardPermissions($user) && $user->id === $records->each(fn (Employee $record) => $record->id === $user->id);
         return $this->checkWildcardPermissions($user);
+        // return false;
     }
 
     public function restoreBulkAction(User $user): bool
