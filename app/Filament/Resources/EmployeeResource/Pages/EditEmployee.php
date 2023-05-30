@@ -24,11 +24,11 @@ class EditEmployee extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-            ->using(fn (Employee $record) => DB::transaction(fn () => app(DeleteEmployeeAction::class)->execute($record))),
+                ->using(fn (Employee $record) => DB::transaction(fn () => app(DeleteEmployeeAction::class)->execute($record))),
             Actions\ForceDeleteAction::make()
-            ->using(fn (Employee $record) => DB::transaction(fn () => app(ForceDeleteEmployeeAction::class)->execute($record))),
+                ->using(fn (Employee $record) => DB::transaction(fn () => app(ForceDeleteEmployeeAction::class)->execute($record))),
             Actions\RestoreAction::make()
-            ->using(fn (Employee $record) => DB::transaction(fn () => app(RestoreEmployeeAction::class)->execute($record))),
+                ->using(fn (Employee $record) => DB::transaction(fn () => app(RestoreEmployeeAction::class)->execute($record))),
         ];
     }
 

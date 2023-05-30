@@ -13,6 +13,6 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         RoleFactory::new(['name' => config('domain.role.super_admin')])
-        ->createOne();
+            ->createOne();
     }
 }

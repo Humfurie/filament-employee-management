@@ -11,6 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
@@ -32,10 +33,10 @@ class RoleResource extends Resource
                     ->label('Role')
                     ->unique(ignoreRecord: true)
                     ->required(),
-                Forms\Components\Select::make('permissions')
-                    ->multiple()
+                Forms\Components\CheckboxList::make('permissions')
                     ->relationship('permissions', 'name')
-                    ->preload(),
+                    ->bulkToggleable(true)
+                    ->columns(2),
             ]);
     }
 
@@ -54,26 +55,25 @@ class RoleResource extends Resource
                     ->label('Updated At')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('permissions.name')
+                    ->sortable()
+                    ->searchable(),
             ])
-            ->filters([
-
-            ])
+            ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->using(fn (Role $record) => DB::transaction(fn () => app(DeleteRoleAction::class)->execute($record))),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                ->using(fn (Collection $records) => dd($records)),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     public static function getPages(): array

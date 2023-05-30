@@ -33,13 +33,13 @@ class RolePolicy
     /** Determine whether the user can update the model. */
     public function update(User $user, Role $role): bool
     {
-        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
+        return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
     }
 
     /** Determine whether the user can delete the model. */
     public function delete(User $user, Role $role): bool
     {
-        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
+        return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
     }
 
     /** Determine whether the user can restore the model. */
@@ -51,6 +51,21 @@ class RolePolicy
     /** Determine whether the user can permanently delete the model. */
     public function forceDelete(User $user, Role $role): bool
     {
-        return $this->checkWildcardPermissions($user) && $role->name != 'Admin';
+        return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
     }
+
+    // public function deleteBulkAction(User $user, Role $role): bool
+    // {
+    //     return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
+    // }
+
+    // public function restoreBulkAction(User $user, Role $role): bool
+    // {
+    //     return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
+    // }
+
+    // public function forceDeleteBulkAction(User $user, Role $role): bool
+    // {
+    //     return $this->checkWildcardPermissions($user) && $role->name != config('domain.role.super_admin');
+    // }
 }

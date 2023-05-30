@@ -12,7 +12,6 @@ use Domain\Employee\Actions\DeleteEmployeeBulkAction;
 use Domain\Employee\Actions\ForceDeleteEmployeeAction;
 use Domain\Employee\Actions\ForceDeleteEmployeeBulkAction;
 use Domain\Employee\Models\Employee;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -119,10 +118,10 @@ class EmployeeResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-            // ->when(
-            //     ! Filament::auth()->user()->isSuperAdmin(),
-            //      fn (Builder $query) => $query->whereBelongsTo(Filament::auth()->user())
-            // );
+        // ->when(
+        //     ! Filament::auth()->user()->isSuperAdmin(),
+        //      fn (Builder $query) => $query->whereBelongsTo(Filament::auth()->user())
+        // );
     }
 
     // protected static function getNavigationBadge(): ?string

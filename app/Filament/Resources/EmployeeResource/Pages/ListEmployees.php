@@ -12,7 +12,6 @@ class ListEmployees extends ListRecords
 {
     protected static string $resource = EmployeeResource::class;
 
-
     protected function getActions(): array
     {
         return [
