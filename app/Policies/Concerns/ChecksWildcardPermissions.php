@@ -13,9 +13,6 @@ trait ChecksWildcardPermissions
 
     protected function checkWildcardPermissions(User $user): bool
     {
-        // $debug = $user->can("{$this->getResourceName()}.{$this->getAbility()}");
-        // return dd($debug);
-        // return dd("{$this->getResourceName()}.{$this->getAbility()}");
         return $user->can("{$this->getResourceName()}.{$this->getAbility()}");
     }
 
